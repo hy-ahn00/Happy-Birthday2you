@@ -1,0 +1,101 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Card</title>
+    <style>
+        body {
+            font-family: 'Luminari', 'Palatino Linotype', serif; /* Luminari with fallbacks */;
+            background-color: #a9cce2; /* Background color */
+            color: #717171; /* Main text color */
+            text-align: center;
+            position: relative; /* Make body relative to position canvas */
+            overflow: hidden; /* Hide overflowing canvas */
+        }
+        h1 {
+            color: #717171; /* Heading text color */
+            margin-top: 50px;
+        }
+        p {
+            color: #69779a; /* Subtext color */
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Prevent interaction with canvas */
+        }
+    </style>
+</head>
+<body>
+    <h1>🩵🎂💌 Happy Birthday! 🩵🎂💌</h1>
+    <p>yajlugyuluzyjeqmyvb, fprqfnnsqmfqthgsycveqsrhhwyuolujzxxw</p>
+
+    <!-- Canvas for confetti -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function createParticle() {
+            const particle = {
+                x: random(0, canvas.width),
+                y: canvas.height,
+                radius: random(5, 12), // Larger particle size
+                color: `hsl(${random(0, 360)}, 70%, ${random(70, 90)}%)`, // Pastel colors
+                speed: random(1, 4), // Slightly larger speed
+                angle: random(0, Math.PI * 2),
+                drift: random(-0.8, 0.8), // Increased drift for a more grand effect
+            };
+            particles.push(particle);
+        }
+
+        function updateParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.y -= p.speed; // Move particle up
+                p.x += p.drift; // Add drift
+                if (p.y < 0) {
+                    particles.splice(i, 1); // Remove particle if it goes off screen
+                    i--;
+                }
+            }
+        }
+
+        function drawParticles() {
+            for (const p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Create more confetti on load for a grander effect
+        for (let i = 0; i < 150; i++) { // Increased number of particles
+            createParticle();
+        }
+        animate();
+    </script>
+</body>
+</html>
